@@ -1,0 +1,40 @@
+import connectDB from "../DB/connect.js";
+import cors from "cors";
+// import { rateLimit } from "express-rate-limit";
+import userRouter from "./routes/user.routes.js";
+import adminRouter from "./routes/admin.routes.js";
+import { GlobalErrorHandling } from "./utils/errorHandling.js";
+import morgan from "morgan";
+
+export const bootstrap = (app, express) => {
+  app.use(cors());
+  //Allow feaching Data
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
+  connectDB();
+  if ((process.env.MOOD = "DEV")) {
+    app.use(morgan("dev"));
+  } else {
+    app.use(morgan("combined"));
+  }
+  // =====================================chk rate limiter==================================================
+  // const limiter = rateLimit({
+  //   windowMs: 15 * 60 * 1000, // 15 minutes
+  //   limit: 100, // Limit each IP to 100 requests per `window`
+  //   standardHeaders: "draft-7",
+  //   legacyHeaders: false,
+  // });
+  // Apply the rate limiting
+  // app.use(limiter);
+
+  // API
+  app.use("/Api/user", userRouter);
+  app.use("/Api/admin", adminRouter);
+
+  //Globale error handling
+  app.use(GlobalErrorHandling);
+
+  //API bad
+  app.all("*", (req, res) => res.send("invalid router link or method!"));
+};
