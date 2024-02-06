@@ -16,8 +16,8 @@ export const CreateAdminInstructor = {
 export const login = {
   body: joi
     .object({
-      Student_Code: joi.string().length(14).required(),
-      password: joi.string().min(8).max(24).required(),
+      email: generalFields.email,
+      password: generalFields.password,
     })
     .required(),
 };

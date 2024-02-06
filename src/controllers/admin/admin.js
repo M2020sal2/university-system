@@ -1,8 +1,7 @@
 import { adminModel } from "../../../DB/models/admin.model.js";
-import { generateToken } from "../../utils/Token.js";
+import { generateToken, storeRefreshToken } from "../../utils/Token.js";
 import { asyncHandler } from "../../utils/errorHandling.js";
-import { formatDOB } from "../../utils/formaDate.js";
-import { hashpassword } from "../../utils/hashpassword.js";
+import { hashpassword, verifypass } from "../../utils/hashpassword.js";
 import { sendconfirmEmail } from "../../utils/sendEmail.js";
 
 export const CreateAdminInstructor = asyncHandler(async (req, res, next) => {
@@ -62,5 +61,55 @@ export const CreateAdminInstructor = asyncHandler(async (req, res, next) => {
   });
 });
 
-export const logout = asyncHandler((req, res, next) => {});
-export const login = asyncHandler((req, res, next) => {});
+export const login = asyncHandler(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  // check Email
+  const user = await adminModel.findOne({ email: email });
+  if (!user) {
+    return next(new Error("Invalid Email or password", { cause: 404 }));
+  }
+
+  // check password
+  const matched = verifypass({
+    password: password,
+    hashpassword: user.password,
+  });
+  if (!matched) {
+    return next(new Error("Invalid Email or password", { cause: 404 }));
+  }
+
+  if (!user.isconfrimed) {
+    return next(
+      new Error(
+        "your Email Not verfied Did you want send to you verfication link to confirm your email",
+        { cause: 404 }
+      )
+    );
+  }
+  //generate accessToken
+  const accessToken = await generateToken({
+    payload: { userId: user._id, role: user.role },
+    signature: process.env.ACCESS_TOKEN_SECRET,
+    expiresIn: process.env.accessExpireIn,
+  });
+
+  //generate refreshToken
+  const refreshToken = await generateToken({
+    payload: { userId: user._id, role: user.role },
+    signature: process.env.REFRESH_TOKEN_SECRET,
+    expiresIn: process.env.REFRESH_ExpireIn,
+  });
+
+  const success = await storeRefreshToken(refreshToken, user._id, next);
+  if (!success) {
+    return next(new Error("Failed to store refresh token"), { cause: 500 });
+  }
+  return res.status(200).json({
+    message: "done login",
+    accessToken: accessToken,
+    refreshToken: refreshToken,
+  });
+});
+
+export const logout = asyncHandler(async (req, res, next) => {});

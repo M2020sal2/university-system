@@ -17,3 +17,12 @@ export const hashpassword = async ({
     throw new Error(error);
   }
 };
+
+export const verifypass = async ({ password, hashpassword } = {}) => {
+  try {
+    const matched = bcrypt.compareSync(password, hashpassword);
+    return matched;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
