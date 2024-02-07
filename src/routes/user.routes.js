@@ -23,7 +23,12 @@ router.get(
   uc.Getuser
 );
 
-router.post("/updateStudent", isAuth([roles.admin]), uc.updateStudent);
+router.put(
+  "/updateStudent",
+  valid(vSchema.updateStudent),
+  isAuth([roles.admin]),
+  uc.updateStudent
+);
 
 router.post("/auth", isAuth(["admin"]));
 // missed login with Gmail   <<<<=====

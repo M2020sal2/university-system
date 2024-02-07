@@ -3,6 +3,7 @@ import { generateToken, verifyToken } from "../utils/Token.js";
 import { asyncHandler } from "../utils/errorHandling.js";
 import userModel from "../../DB/models/user.model.js";
 import TokenModel from "../../DB/models/token.model.js";
+import { adminModel } from "../../DB/models/admin.model.js";
 
 export const isAuth = (roles) => {
   return asyncHandler(async (req, res, next) => {
@@ -34,13 +35,14 @@ export const isAuth = (roles) => {
 
       //if user search in usermodel if admin or instructor search in admin model
       let user;
+      console.log(decode.userId);
       if (decode.role == "user") {
         user = await userModel.findById({ _id: decode.userId });
         if (!user) {
           return next(new Error("please Signup", { cause: 400 }));
         }
       } else {
-        user = await userModel.findById({ _id: decode.userId }); //will edit another time ************
+        user = await adminModel.findById({ _id: decode.userId }); //will edit another time ************
         if (!user) {
           return next(new Error("Create New Account", { cause: 400 }));
         }

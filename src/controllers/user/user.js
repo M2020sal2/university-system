@@ -150,5 +150,84 @@ export const Getuser = asyncHandler(async (req, res, next) => {
   };
   return res.status(200).json({ message: "Done", result });
 });
-export const updateStudent = asyncHandler((req, res, next) => {});
+export const updateStudent = asyncHandler(async (req, res, next) => {
+  const {
+    Full_Name,
+    National_Id,
+    Student_Code,
+    Semester,
+    Level,
+    Academic_Year,
+    Date_of_Birth,
+    PhoneNumber,
+    gender,
+    department,
+    restpassword,
+  } = req.body;
+  const { userId } = req.query;
+  console.log(userId);
+  const user = await userModel.findById({ _id: userId });
+  if (!user) {
+    return next(new Error("user Not found", { cause: 404 }));
+  }
+
+  //check full name
+  if (Full_Name) {
+    const name = await userModel.findOne({ Full_Name: Full_Name });
+    if (name) {
+      return next(new Error("user Name is already exist", { cause: 400 }));
+    }
+    user.Full_Name = Full_Name;
+  }
+
+  //check  national id
+  if (National_Id) {
+    const chkNational_Id = await userModel.findOne({
+      National_Id: National_Id,
+    });
+    if (chkNational_Id) {
+      return next(new Error("National id is already exist", { cause: 400 }));
+    }
+    user.National_Id = National_Id;
+  }
+
+  if (Student_Code) {
+    const chkStudent_Code = await userModel.findOne({
+      Student_Code: Student_Code,
+    });
+    if (chkStudent_Code) {
+      return next(new Error("Student code is already exist", { cause: 400 }));
+    }
+    user.Student_Code = Student_Code;
+  }
+
+  if (PhoneNumber) {
+    const chkphone = await userModel.findOne({
+      PhoneNumber: PhoneNumber,
+    });
+    if (chkphone) {
+      return next(new Error("phone number is already exist", { cause: 400 }));
+    }
+    user.PhoneNumber = PhoneNumber;
+  }
+  if (restpassword) {
+    user.password = National_Id || user.National_Id;
+    delete user.password;
+  }
+  user.Semester = Semester || user.Semester;
+  user.Level = Level || user.Level;
+  user.Academic_Year = Academic_Year || user.Academic_Year;
+  user.gender = gender || user.gender;
+  user.Date_of_Birth = Date_of_Birth || user.Date_of_Birth;
+  user.department = department || user.department;
+
+  const result = await user.save();
+  if (!result) {
+    return next(new Error("Error In update user information", { cause: 500 }));
+  }
+  res.status(200).json({
+    message: "Student information updated successfully",
+    result: result,
+  });
+});
 export const logout = asyncHandler((req, res, next) => {});
