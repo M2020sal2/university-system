@@ -230,4 +230,17 @@ export const updateStudent = asyncHandler(async (req, res, next) => {
     result: result,
   });
 });
-export const logout = asyncHandler((req, res, next) => {});
+
+export const deleteStudent = asyncHandler(async (req, res, next) => {
+  const { userId } = req.query;
+  const user = await userModel
+    .findByIdAndDelete({ _id: userId }, {}, { new: true })
+    .select("_id Full_Name Student_Code gender");
+  console.log(user);
+  if (!user) {
+    return next("user Id not found", { cause: 404 });
+  }
+  res.json({ message: "user Delete successfully", user: user });
+});
+
+export const logout = asyncHandler(async (req, res, next) => {});

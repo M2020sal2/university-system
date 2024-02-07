@@ -17,6 +17,18 @@ router.post(
   ac.CreateAdminInstructor
 );
 
-// router.post("")
+router.put(
+  "/updateAdminInstructor",
+  valid(vSchema.updateAdminInstructor),
+  isAuth([roles.super]),
+  ac.updateAdminInstructor
+);
+
+router.post(
+  "/deleteAdminInstructor",
+  valid(vSchema.deleteAdminInstructor),
+  isAuth([roles.super]),
+  ac.deleteAdminInstructor
+);
 
 export default router;

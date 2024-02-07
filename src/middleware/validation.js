@@ -33,17 +33,13 @@ const validateObjectId = (value, helper) => {
 
 //======================general Validation Fields========================
 export const generalFields = {
-  email: joi
-    .string()
-    .email({ tlds: { allow: ["com", "net", "org"] } })
-    .required(),
+  email: joi.string().email({ tlds: { allow: ["com", "net", "org"] } }),
   password: joi
     .string()
     .regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)
     .messages({
       "string.pattern.base": "Password regex fail",
-    })
-    .required(),
+    }),
   _id: joi.string().custom(validateObjectId),
   file: joi.object({
     size: joi.number(),

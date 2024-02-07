@@ -35,7 +35,6 @@ export const isAuth = (roles) => {
 
       //if user search in usermodel if admin or instructor search in admin model
       let user;
-      console.log(decode.userId);
       if (decode.role == "user") {
         user = await userModel.findById({ _id: decode.userId });
         if (!user) {
@@ -68,10 +67,11 @@ export const isAuth = (roles) => {
         // token  => search in db
         const reftoken = await TokenModel.findOne({
           refreshToken: refreshToken,
+          isvalid: true,
           userId: verifyreftoken.userId,
         });
         if (!reftoken) {
-          return next(new Error("Wrong token", { cause: 400 }));
+          return next(new Error("Wrong token or Not Valid", { cause: 400 }));
         }
 
         // generate new token
@@ -106,6 +106,7 @@ export const isAuth = (roles) => {
 };
 
 export const roles = {
+  super: "superAdmin",
   stu: "user",
   admin: "admin",
   instructor: "instructor",

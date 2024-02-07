@@ -52,3 +52,11 @@ export const updateStudent = {
     .required(),
   // file: joi.object().required(),
 };
+
+export const deleteStudent = {
+  query: joi
+    .object({
+      userId: generalFields._id.required(),
+    })
+    .required(),
+};

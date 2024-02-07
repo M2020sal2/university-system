@@ -30,6 +30,13 @@ router.put(
   uc.updateStudent
 );
 
+router.delete(
+  "/deleteStudent",
+  valid(vSchema.deleteStudent),
+  isAuth([roles.admin]),
+  uc.deleteStudent
+);
+
 router.post("/auth", isAuth(["admin"]));
 // missed login with Gmail   <<<<=====
 export default router;
