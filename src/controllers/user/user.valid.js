@@ -4,8 +4,14 @@ export const registeruser = {
   body: joi
     .object({
       Full_Name: joi.string().min(9).max(66).required(),
-      National_Id: joi.string().length(14).required(),
-      Student_Code: joi.string().length(14).required(),
+      National_Id: joi
+        .string()
+        .pattern(/^[0-9]{14}$/)
+        .required(),
+      Student_Code: joi
+        .string()
+        .pattern(/^[0-9]{14}$/)
+        .required(),
       Semester: joi.string().valid("one", "two").required(),
       Level: joi.string().valid("one", "two", "three", "four").required(),
       Academic_Year: joi.string().min(4).max(12).required(),
@@ -23,7 +29,10 @@ export const registeruser = {
 export const login = {
   body: joi
     .object({
-      Student_Code: joi.string().length(14).required(),
+      Student_Code: joi
+        .string()
+        .pattern(/^[0-9]{14}$/)
+        .required(),
       password: joi.string().min(8).max(24).required(),
     })
     .required(),
@@ -33,8 +42,14 @@ export const updateStudent = {
   body: joi
     .object({
       Full_Name: joi.string().min(9).max(66).optional(),
-      National_Id: joi.string().length(14).optional(),
-      Student_Code: joi.string().length(14).optional(),
+      National_Id: joi
+        .string()
+        .pattern(/^[0-9]{14}$/)
+        .optional(),
+      Student_Code: joi
+        .string()
+        .pattern(/^[0-9]{14}$/)
+        .optional(),
       Semester: joi.string().valid("one", "two").optional(),
       Level: joi.string().valid("one", "two", "three", "four").optional(),
       Academic_Year: joi.string().min(4).max(12).optional(),

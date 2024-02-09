@@ -35,6 +35,7 @@ export const isAuth = (roles) => {
 
       //if user search in usermodel if admin or instructor search in admin model
       let user;
+      console.log(decode.role);
       if (decode.role == "user") {
         user = await userModel.findById({ _id: decode.userId });
         if (!user) {

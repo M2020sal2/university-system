@@ -30,13 +30,14 @@ export const login = asyncHandler(async (req, res, next) => {
       )
     );
   }
+  console.log(user.role);
+
   //generate accessToken
   const accessToken = await generateToken({
     payload: { userId: user._id, role: user.role },
     signature: process.env.ACCESS_TOKEN_SECRET,
     expiresIn: process.env.accessExpireIn,
   });
-
   //generate refreshToken
   const refreshToken = await generateToken({
     payload: { userId: user._id, role: user.role },
@@ -55,8 +56,17 @@ export const login = asyncHandler(async (req, res, next) => {
   });
 });
 export const CreateAdminInstructor = asyncHandler(async (req, res, next) => {
-  const { FullName, email, password, phone, Date_of_Birth, gender, role } =
-    req.body;
+  const {
+    FullName,
+    email,
+    password,
+    phone,
+    Date_of_Birth,
+    gender,
+    department,
+    Materials,
+  } = req.body;
+  console.log(req.originalUrl);
 
   //chk name
   const chkName = await adminModel.findOne({ FullName: FullName });
@@ -86,9 +96,19 @@ export const CreateAdminInstructor = asyncHandler(async (req, res, next) => {
     phone: phone,
     Date_of_Birth: Date_of_Birth,
     gender: gender,
-    role: role,
     isconfrimed: false,
   };
+
+  //if he instractor
+  if ("/Api/instructor/create" == req.originalUrl) {
+    if (!Materials || !department) {
+      return next(
+        new Error("Materials and department are required.", { cause: 400 })
+      );
+    }
+    user.department = department;
+    user.Materials = Materials;
+  }
 
   const result = await adminModel.create(user);
   if (!result) {
@@ -112,8 +132,16 @@ export const CreateAdminInstructor = asyncHandler(async (req, res, next) => {
 });
 
 export const updateAdminInstructor = asyncHandler(async (req, res, next) => {
-  const { FullName, phone, email, password, Date_of_Birth, gender, role } =
-    req.body;
+  const {
+    FullName,
+    phone,
+    email,
+    password,
+    Date_of_Birth,
+    gender,
+    Materials,
+    department,
+  } = req.body;
   const { userId } = req.query;
 
   const user = await adminModel.findById(userId);
@@ -156,7 +184,8 @@ export const updateAdminInstructor = asyncHandler(async (req, res, next) => {
 
   user.Date_of_Birth = Date_of_Birth || user.Date_of_Birth;
   user.gender = gender || user.gender;
-  user.role = role || user.role;
+  user.Materials = Materials || user.Materials;
+  user.department = department || user.department;
 
   const result = await user.save();
 
@@ -176,4 +205,18 @@ export const deleteAdminInstructor = asyncHandler(async (req, res, next) => {
   res.json({ message: "user Delete successfully", user: user });
 });
 
+export const updaterole = asyncHandler(async (req, res, next) => {
+  const { role } = req.body;
+  const { userId } = req.query;
+  const user = await adminModel.findById(userId);
+  if (!user) {
+    return next(new Error("Invalid userId not found", { cause: 404 }));
+  }
+  user.role = role;
+  const result = await user.save();
+  return res.status(200).json({
+    message: `User updated successfully Henow is ${result.role}`,
+    user: result,
+  });
+});
 export const logout = asyncHandler(async (req, res, next) => {});

@@ -84,3 +84,111 @@ export const confirmEmailTemplet = async (link) => {
                 </body>
                 </html>`;
 };
+
+export const hellowpage = async () => {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohamed Hamed Portfolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #333;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #444;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: center;
+        }
+
+        h2 {
+            font-size: 30px;
+            margin-bottom: 10px;
+            color: #9c9fde;
+        }
+
+        span {
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            background-color: #007bff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        a:hover {
+            background-color: #06325f;
+        }
+
+        .social-icons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            margin-right: 10px;
+            font-size: 24px;
+            color: #fff;
+        }
+
+        img {
+            max-width: 300px;
+            border-radius: 10px;
+            margin-right: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="https://res.cloudinary.com/dxjng5bfy/image/upload/v1707436978/Genaral%20IMgs/feh8uaxqd3otanlc9lao.jpg"
+            alt="Mohamed Hamed">
+        <div>
+            <h2>My Name is <span>Mohamed Hamed</span></h2>
+            <p>Backend Node.js Developer</p>
+            <h4>Welcome to My API Services</h4>
+            <p>Click this <a href="https://documenter.getpostman.com/view/27782301/2s9Ye8fup3">link</a> to view <span>
+                    API project documentation.</span></p>
+            <p>To view the full <span>project on GitHub</span> click this <a
+                    href="https://github.com/M2020sal2/EcommerceAPP_-Recap/tree/main">Link</a>.</p>
+        </div>
+    </div>
+    <div class="social-icons">
+        <a href="https://github.com/M2020sal2" target="_blank"><i class="fab fa-github"></i>GitHub</a>
+        <a href="https://www.linkedin.com/in/mohamed-hamed-9b2655225/" target="_blank"><i
+                class="fab fa-linkedin"></i>LinkedIn</a>
+    </div>
+</body>
+
+</html>`;
+};

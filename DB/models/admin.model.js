@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from "mongoose";
+import mongoose, { Schema, Types, model } from "mongoose";
 
 //user model Schema
 const adminSchema = new Schema(
@@ -51,8 +51,9 @@ const adminSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["admin", "instructor"],
-      required: true,
+      enum: ["user", "admin", "instructor"],
+      required: false,
+      default: "user",
     },
     isconfrimed: {
       type: Boolean,
@@ -62,6 +63,16 @@ const adminSchema = new Schema(
       type: String,
       min: 6,
     },
+    department: {
+      type: String,
+      enum: ["cs", "is", "sc", "ai"],
+    },
+    Materials: [
+      {
+        type: Types.ObjectId,
+        ref: "course",
+      },
+    ],
   },
   { timestamps: true }
 );
