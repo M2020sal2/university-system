@@ -17,7 +17,7 @@ router.post(
 );
 
 router.get(
-  "/Getuser",
+  "/getuser",
   // valid(vSchema.Getstudent),
   isAuth([roles.stu, roles.instructor, roles.admin]),
   uc.Getuser
