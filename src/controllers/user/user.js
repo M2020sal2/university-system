@@ -125,6 +125,7 @@ export const login = asyncHandler(async (req, res, next) => {
     message: "done login",
     accessToken: accessToken,
     refreshToken: refreshToken,
+    role: user.role,
   });
 });
 
