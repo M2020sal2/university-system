@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { bootstrap } from "./src/index.routes.js";
 const app = express();
-dotenv.config({ path: "./config/config.env" });
+dotenv.config({ path: "./.env" });
 
 //bootstrap
 bootstrap(app, express);
