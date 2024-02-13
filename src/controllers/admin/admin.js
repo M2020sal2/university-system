@@ -246,6 +246,7 @@ export const Getuser = asyncHandler(async (req, res, next) => {
     Date_of_Birth: user.Date_of_Birth,
     gender: user.gender,
     department: user?.department,
+    role: user.role,
   };
   return res.status(200).json({ message: "Done", user: result });
 });
