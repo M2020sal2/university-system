@@ -62,6 +62,7 @@ export const isAuth = (roles) => {
           token: refreshToken,
           signature: process.env.REFRESH_TOKEN_SECRET,
         });
+        console.log(verifyreftoken);
         if (!verifyreftoken) {
           return next(new Error("Invalid refresh token", { cause: 400 }));
         }

@@ -1,0 +1,43 @@
+import mongoose, { Types } from "mongoose";
+
+const CourseSchema = new mongoose.Schema(
+  {
+    course_name: {
+      type: String,
+      required: true,
+      min: 3,
+      max: 30,
+    },
+    desc: {
+      type: String,
+      required: false,
+      min: 20,
+      max: 200,
+    },
+    credit_hour: {
+      type: Number,
+      required: true,
+      enum: [2, 3],
+    },
+    instructorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "admin",
+      required: false,
+    },
+    OpenForRegistration: {
+      type: Boolean,
+      default: false,
+    },
+    Prerequisites: [
+      {
+        type: Types.ObjectId,
+        ref: "course",
+      },
+    ],
+  },
+  { timestamps: true }
+);
+
+const CourseModel = mongoose.model("course", CourseSchema);
+
+export default CourseModel;

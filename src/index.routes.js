@@ -4,6 +4,7 @@ import cors from "cors";
 import userRouter from "./routes/user.routes.js";
 import adminRouter from "./routes/admin.routes.js";
 import instructorRouter from "./routes/admin.routes.js";
+import courseRouter from "./routes/course.routes.js";
 import { GlobalErrorHandling } from "./utils/errorHandling.js";
 import morgan from "morgan";
 import { hellowpage } from "./utils/templetHtml.js";
@@ -34,6 +35,7 @@ export const bootstrap = (app, express) => {
   app.use("/Api/user", userRouter);
   app.use("/Api/admin", adminRouter);
   app.use("/Api/instructor", instructorRouter);
+  app.use("/Api/courses", courseRouter);
 
   //Globale error handling
   app.use(GlobalErrorHandling);

@@ -37,4 +37,11 @@ router.patch(
   isAuth([roles.super]),
   ac.updaterole
 );
+
+router.get(
+  "/getinfo",
+  // valid(vSchema.Getstudent),
+  isAuth([roles.instructor, roles.admin]),
+  ac.Getuser
+);
 export default router;

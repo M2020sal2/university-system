@@ -56,6 +56,7 @@ export const login = asyncHandler(async (req, res, next) => {
     role: user.role,
   });
 });
+
 export const CreateAdminInstructor = asyncHandler(async (req, res, next) => {
   const {
     FullName,
@@ -220,4 +221,33 @@ export const updaterole = asyncHandler(async (req, res, next) => {
     user: result,
   });
 });
+
+//Get user
+export const Getuser = asyncHandler(async (req, res, next) => {
+  const user = req.user;
+  if (!user) {
+    return next(
+      new Error("Invalid User Data please Try Again", { cause: 500 })
+    );
+  }
+
+  if ("/Api/instructor/getinfo" == req.originalUrl) {
+    if (user.role != "instructor") {
+      return next(
+        new Error("Not allow to login this for instructor only", { cause: 400 })
+      );
+    }
+  }
+
+  const result = {
+    FullName: user.FullName,
+    email: user.email,
+    phone: user.phone,
+    Date_of_Birth: user.Date_of_Birth,
+    gender: user.gender,
+    department: user?.department,
+  };
+  return res.status(200).json({ message: "Done", user: result });
+});
+
 export const logout = asyncHandler(async (req, res, next) => {});
