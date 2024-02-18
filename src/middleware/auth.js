@@ -11,8 +11,12 @@ export const isAuth = (roles) => {
     const refreshToken = req.headers["refresh-token"];
 
     //check token send
-    if (!accessToken) {
-      return next(new Error("Please login first", { cause: 400 }));
+    if (!accessToken || !refreshToken) {
+      return next(
+        new Error("Please login first && refreshToken accessToken reqired ", {
+          cause: 400,
+        })
+      );
     }
 
     //check token startwith

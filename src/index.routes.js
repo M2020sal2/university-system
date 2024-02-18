@@ -3,7 +3,9 @@ import cors from "cors";
 // import { rateLimit } from "express-rate-limit";
 import userRouter from "./routes/user.routes.js";
 import adminRouter from "./routes/admin.routes.js";
+import semsterRouter from "./routes/semster.routes.js";
 import instructorRouter from "./routes/admin.routes.js";
+import totalGratesRouter from "./routes/TotalGrates.routes.js";
 import courseRouter from "./routes/course.routes.js";
 import { GlobalErrorHandling } from "./utils/errorHandling.js";
 import morgan from "morgan";
@@ -36,7 +38,8 @@ export const bootstrap = (app, express) => {
   app.use("/Api/admin", adminRouter);
   app.use("/Api/instructor", instructorRouter);
   app.use("/Api/courses", courseRouter);
-
+  app.use("/Api/semster", semsterRouter);
+  app.use("/Api/total_grates", totalGratesRouter);
   //Globale error handling
   app.use(GlobalErrorHandling);
 

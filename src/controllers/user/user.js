@@ -1,3 +1,5 @@
+import TotalGratesModel from "../../../DB/models/TotalGrates.model.js";
+import SemesterModel from "../../../DB/models/semster.model.js";
 import userModel from "../../../DB/models/user.model.js";
 import { generateToken, storeRefreshToken } from "../../utils/Token.js";
 import { asyncHandler } from "../../utils/errorHandling.js";
@@ -8,10 +10,8 @@ export const add_stu = asyncHandler(async (req, res, next) => {
     Full_Name,
     National_Id,
     Student_Code,
-    Semester,
-    Level,
-    Academic_Year,
     Date_of_Birth,
+    semesterId,
     PhoneNumber,
     gender,
     department,
@@ -19,7 +19,7 @@ export const add_stu = asyncHandler(async (req, res, next) => {
 
   National_Id = parseInt(National_Id);
   Student_Code = parseInt(Student_Code);
-
+  console.log(semesterId);
   // التحقق من نجاح التحويل
   if (isNaN(National_Id) || isNaN(Student_Code)) {
     return next(new Error("Invalid National_Id or Student_Code"), {
@@ -50,15 +50,17 @@ export const add_stu = asyncHandler(async (req, res, next) => {
   if (chkName) {
     return next(new Error("Student Name is Already Exist"), { cause: 400 });
   }
+  const semester = await SemesterModel.findById(semesterId);
+  if (!semester) {
+    return next(new Error("Invalid semster Id", { cause: 400 }));
+  }
 
   const student = {
     Full_Name,
     National_Id,
     Student_Code,
-    Semester,
-    Level,
-    Academic_Year,
     Date_of_Birth,
+    semesterId: semester._id,
     PhoneNumber,
     gender,
     role: "user",
@@ -136,14 +138,12 @@ export const Getuser = asyncHandler(async (req, res, next) => {
       new Error("Invalid User Data please Try Again", { cause: 500 })
     );
   }
-
+  const semester = await SemesterModel.findById(user.semesterId);
   const result = {
     Full_Name: user.Full_Name,
     National_Id: user.National_Id,
     Student_Code: user.Student_Code,
-    Semester: user.Semester,
-    Level: user.Level,
-    Academic_Year: user.Academic_Year,
+    semester: semester,
     Date_of_Birth: user.Date_of_Birth,
     PhoneNumber: user.PhoneNumber,
     gender: user.gender,

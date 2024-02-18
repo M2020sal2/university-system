@@ -12,9 +12,7 @@ export const registeruser = {
         .string()
         .pattern(/^[0-9]{14}$/)
         .required(),
-      Semester: joi.string().valid("one", "two").required(),
-      Level: joi.string().valid("one", "two", "three", "four").required(),
-      Academic_Year: joi.string().min(4).max(12).required(),
+      semesterId: generalFields._id.required(),
       Date_of_Birth: joi.date().iso().required(),
       PhoneNumber: joi.string().min(11).max(11).required(),
       department: joi.string().valid("cs", "is", "ai", "sc").optional(),
