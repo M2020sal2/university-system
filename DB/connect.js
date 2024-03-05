@@ -2,12 +2,12 @@ import monngoose from "mongoose";
 //connect With DataBase
 const connectDB = async () => {
   await monngoose
-    .connect(`mongodb://root:example@mongo:27017`)
+    .connect(process.env.DB_url)
     .then(() => {
       console.log("DB connected");
     })
     .catch((error) => {
-      console.log("error in connection :(", error);
+      console.log("error in connection :(");
     });
 };
 export default connectDB;

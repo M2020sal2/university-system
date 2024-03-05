@@ -8,7 +8,6 @@ export const asyncHandler = (controller) => {
   };
 };
 
-
 export const GlobalErrorHandling = (error, req, res, next) => {
   let result = {};
   if (process.env.NODE_ENV == "DEV") {
@@ -18,5 +17,3 @@ export const GlobalErrorHandling = (error, req, res, next) => {
   }
   return res.status(error.cause || 500).json(result);
 };
-
-
