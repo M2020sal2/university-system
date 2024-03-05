@@ -1,6 +1,6 @@
 import joi from "joi";
 import { generalFields } from "../../middleware/validation.js";
-export const CreateAdmin = {
+export const CreateInstructor = {
   body: joi
     .object({
       FullName: joi.string().min(9).max(66).required(),
@@ -9,6 +9,8 @@ export const CreateAdmin = {
       Date_of_Birth: joi.date().iso().required(),
       phone: generalFields.PhoneNumber.required(),
       gender: generalFields.gender.optional(),
+      department: generalFields.department.required(),
+      Materials: joi.array().items(generalFields._id.optional()).optional(),
     })
     .required(),
 };
@@ -21,7 +23,7 @@ export const login = {
     .required(),
 };
 
-export const updateAdmin = {
+export const updateInstructor = {
   body: joi
     .object({
       FullName: joi.string().min(9).max(66).optional(),
@@ -30,6 +32,8 @@ export const updateAdmin = {
       Date_of_Birth: joi.date().iso().optional(),
       phone: generalFields.PhoneNumber.optional(),
       gender: generalFields.gender.optional(),
+      department: generalFields.department.optional(),
+      Materials: joi.array().items(generalFields._id.optional()).optional(),
     })
     .required(),
   // paramas: joi.object().required(),
@@ -40,7 +44,7 @@ export const updateAdmin = {
     .required(),
   // file: joi.object().required(),
 };
-export const deleteAdmin = {
+export const deleteInstructor = {
   query: joi
     .object({
       userId: generalFields._id.required(),
@@ -48,7 +52,7 @@ export const deleteAdmin = {
     .required(),
 };
 
-export const searchAdmin = {
+export const searchInstructor = {
   query: joi
     .object({
       sort: joi.string(),
@@ -59,15 +63,3 @@ export const searchAdmin = {
     })
     .required(),
 };
-// export const updaterole = {
-//   query: joi
-//     .object({
-//       userId: generalFields._id.required(),
-//     })
-//     .required(),
-//   body: joi
-//     .object({
-//       role: joi.string().valid("instructor", "user", "admin").required(),
-//     })
-//     .required(),
-// };

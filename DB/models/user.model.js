@@ -24,22 +24,12 @@ const userSchema = new Schema(
       maxlength: 14,
     },
 
-    Semester: {
-      type: String,
-      required: true,
-      enum: ["one", "two"],
-      default: "one",
-    },
-    Level: {
-      type: String,
-      required: true,
-      enum: ["one", "two", "three", "four"],
-      default: "one",
-    },
-    Academic_Year: {
-      type: String,
+    semesterId: {
+      type: Types.ObjectId,
+      ref: "semster",
       required: true,
     },
+
     Date_of_Birth: {
       type: Date,
       required: true,

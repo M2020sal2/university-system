@@ -1,7 +1,7 @@
 import mongoose, { Schema, Types, model } from "mongoose";
 
 //user model Schema
-const adminSchema = new Schema(
+const InstructorSchema = new Schema(
   {
     FullName: {
       type: String,
@@ -51,21 +51,36 @@ const adminSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["user", "admin", "superAdmin"],
+      enum: ["user", "instructor"],
       required: true,
-      // default: "user",
+      default: "instructor",
     },
     isconfrimed: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     Activecode: {
       type: String,
       min: 6,
     },
+    department: {
+      type: String,
+      enum: ["cs", "is", "sc", "ai"],
+      required: true,
+    },
+    Materials: [
+      {
+        type: Types.ObjectId,
+        ref: "course",
+      },
+    ],
   },
   { timestamps: true }
 );
 
-export const adminModel =
-  mongoose.models.adminModel || model("admin", adminSchema);
+InstructorSchema.path("Materials").default(undefined);
+
+InstructorSchema.path("Materials").required(false);
+
+export const InstructorModel =
+  mongoose.models.InstructorModel || model("Instructor", InstructorSchema);

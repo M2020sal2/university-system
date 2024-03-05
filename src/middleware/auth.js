@@ -3,15 +3,20 @@ import { generateToken, verifyToken } from "../utils/Token.js";
 import { asyncHandler } from "../utils/errorHandling.js";
 import userModel from "../../DB/models/user.model.js";
 import TokenModel from "../../DB/models/token.model.js";
+import { adminModel } from "../../DB/models/admin.model.js";
+import { InstructorModel } from "../../DB/models/instructor.model.js";
 
 export const isAuth = (roles) => {
   return asyncHandler(async (req, res, next) => {
     const accessToken = req.headers.authorization;
     const refreshToken = req.headers["refresh-token"];
-
     //check token send
-    if (!accessToken) {
-      return next(new Error("Please login first", { cause: 400 }));
+    if (!accessToken || !refreshToken) {
+      return next(
+        new Error("Please login first OR refreshToken accessToken Not found ", {
+          cause: 400,
+        })
+      );
     }
 
     //check token startwith
@@ -28,10 +33,15 @@ export const isAuth = (roles) => {
         token: splitedToken,
         signature: process.env.ACCESS_TOKEN_SECRET,
       });
-      if (!decode.userId || !decode.role) {
+      if (!decode.userId || !decode.role || !decode.IpAddress) {
         return next(new Error("Invalid Token Payload", { cause: 400 }));
       }
 
+      if (decode.IpAddress != req.ip) {
+        return next(
+          new Error("Invalid Ip Address Login Again", { cause: 401 })
+        );
+      }
       //if user search in usermodel if admin or instructor search in admin model
       let user;
       if (decode.role == "user") {
@@ -39,8 +49,13 @@ export const isAuth = (roles) => {
         if (!user) {
           return next(new Error("please Signup", { cause: 400 }));
         }
+      } else if (decode.role == "instructor") {
+        user = await InstructorModel.findById({ _id: decode.userId });
+        if (!user) {
+          return next(new Error("Create New Account", { cause: 400 }));
+        }
       } else {
-        user = await userModel.findById({ _id: decode.userId }); //will edit another time ************
+        user = await adminModel.findById({ _id: decode.userId }); //will edit another time ************
         if (!user) {
           return next(new Error("Create New Account", { cause: 400 }));
         }
@@ -54,22 +69,25 @@ export const isAuth = (roles) => {
       req.user = user;
       return next();
     } catch (error) {
-      if (error.message == "TokenExpiredError: jwt expired") {
+      if (error.message.includes("jwt expired")) {
         // verify refresh token
         const verifyreftoken = verifyToken({
           token: refreshToken,
           signature: process.env.REFRESH_TOKEN_SECRET,
         });
-        if (!verifyreftoken) {
-          return next(new Error("Invalid refresh token", { cause: 400 }));
+        if (!verifyreftoken || verifyreftoken?.IpAddress != req.ip) {
+          return next(
+            new Error("Invalid refresh Token or IP ", { cause: 400 })
+          );
         }
         // token  => search in db
         const reftoken = await TokenModel.findOne({
           refreshToken: refreshToken,
+          isvalid: true,
           userId: verifyreftoken.userId,
         });
         if (!reftoken) {
-          return next(new Error("Wrong token", { cause: 400 }));
+          return next(new Error("Wrong token or Not Valid", { cause: 400 }));
         }
 
         // generate new token
@@ -78,6 +96,7 @@ export const isAuth = (roles) => {
           payload: {
             userId: reftoken.userId,
             role: verifyreftoken.role,
+            IpAddress: req.ip,
           },
           signature: process.env.ACCESS_TOKEN_SECRET,
           expiresIn: process.env.accessExpireIn,
@@ -96,14 +115,15 @@ export const isAuth = (roles) => {
           refreshToken: refreshToken,
         });
       } else {
-        // throw new Error(error);
-        return next(new Error("invalid token", { cause: 500 }));
+        throw new Error(error);
+        // return next(new Error("invalid token", { cause: 500 }));
       }
     }
   });
 };
 
 export const roles = {
+  super: "superAdmin",
   stu: "user",
   admin: "admin",
   instructor: "instructor",

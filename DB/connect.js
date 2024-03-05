@@ -2,7 +2,7 @@ import monngoose from "mongoose";
 //connect With DataBase
 const connectDB = async () => {
   await monngoose
-    .connect(process.env.DB_url)
+    .connect(`mongodb://root:example@mongo:27017`)
     .then(() => {
       console.log("DB connected");
     })

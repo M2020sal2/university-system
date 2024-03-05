@@ -10,21 +10,38 @@ const router = Router();
 router.post("/login", valid(vSchema.login), uc.login);
 
 router.post(
-  "/add_stu",
+  "/addStudent",
   valid(vSchema.registeruser),
   isAuth([roles.admin]),
-  uc.add_stu
+  uc.addStudent
 );
 
 router.get(
-  "/Getuser",
+  "/getuser",
   // valid(vSchema.Getstudent),
-  isAuth([roles.stu, roles.instructor, roles.admin]),
+  isAuth([roles.stu]),
   uc.Getuser
 );
 
-router.post("/updateStudent", isAuth([roles.admin]), uc.updateStudent);
+router.put(
+  "/updateStudent",
+  valid(vSchema.updateStudent),
+  isAuth([roles.admin]),
+  uc.updateStudent
+);
 
-router.post("/auth", isAuth(["admin"]));
-// missed login with Gmail   <<<<=====
+router.delete(
+  "/deleteStudent",
+  valid(vSchema.deleteStudent),
+  isAuth([roles.admin]),
+  uc.deleteStudent
+);
+
+router.get(
+  "/searchuser",
+  valid(vSchema.searchuser),
+  isAuth([roles.admin, roles.instructor]),
+  uc.searchuser
+);
+
 export default router;

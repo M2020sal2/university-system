@@ -1,0 +1,15 @@
+version: "3"
+services:
+  node-app:
+    build:
+      context: .
+      target: development
+    volumes:
+      - ./src:/app/src:ro
+      - ./index.js:/app/index.js:ro
+      - ./DB:/app/DB:ro
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - ./config/config.env
+    command: npm run dev

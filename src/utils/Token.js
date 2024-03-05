@@ -24,13 +24,13 @@ export const storeRefreshToken = async (refreshToken, userId, next) => {
 };
 
 export const verifyToken = ({
-  token = "",
+  token,
   signature = process.env.DEFAULT_SIGNATURE,
 } = {}) => {
   try {
     // check if the payload is empty object
     if (!token) {
-      throw new Error("Error in verify Token");
+      throw new Error("Error in verify Token Not found");
     }
     const data = jwt.verify(token, signature);
     if (!data) {
@@ -38,7 +38,7 @@ export const verifyToken = ({
     }
     return data;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error.message);
   }
 };
 
@@ -58,6 +58,6 @@ export const generateToken = async ({
     }
     return token;
   } catch (error) {
-    throw new Error(error);
+    throw new Error("wtf is happended");
   }
 };
