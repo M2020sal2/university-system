@@ -1,5 +1,9 @@
 import { adminModel } from "../../../DB/models/admin.model.js";
 import CourseModel from "../../../DB/models/course.model.js";
+import { InstructorModel } from "../../../DB/models/instructor.model.js";
+import SemesterModel from "../../../DB/models/semster.model.js";
+import trainingmodel from "../../../DB/models/training.model.js";
+import userModel from "../../../DB/models/user.model.js";
 import { generateToken, storeRefreshToken } from "../../utils/Token.js";
 import { ApiFeature } from "../../utils/apiFeature.js";
 import { asyncHandler } from "../../utils/errorHandling.js";
@@ -240,5 +244,18 @@ export const searchAdmin = asyncHandler(async (req, res, next) => {
 
   const admin = await apiFeatureInstance.MongoseQuery;
   return res.status(200).json({ message: "Done All Admin Information", admin });
+});
+export const info = asyncHandler(async (req, res, next) => {
+  const courses = await CourseModel.countDocuments();
+  const students = await userModel.countDocuments();
+  const admins = await adminModel.countDocuments();
+  const instructors = await InstructorModel.countDocuments();
+  const semsters = await SemesterModel.countDocuments();
+  const training = await trainingmodel.countDocuments();
+
+  return res.status(200).json({
+    message: "done",
+    info: { courses, students, admins, instructors, semsters, training },
+  });
 });
 export const logout = asyncHandler(async (req, res, next) => {});

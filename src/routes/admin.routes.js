@@ -46,4 +46,5 @@ router.get(
 //   ac.updaterole
 // );
 
+router.get("/info", isAuth([roles.admin]), ac.info);
 export default router;
