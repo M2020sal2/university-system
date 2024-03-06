@@ -16,6 +16,13 @@ const customMessages = {
   "any.required": "{#label} is required",
 };
 
+// دالة لإضافة أيام إلى التاريخ
+function addDays(date, days) {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
 export const addtrain = {
   body: joi
     .object({
@@ -29,7 +36,15 @@ export const addtrain = {
       OpenForRegister: joi.boolean().optional().messages(customMessages),
       instructor_id: generalFields._id.optional().messages(customMessages),
       start_date: joi.date().iso().required().messages(customMessages),
-      end_date: joi.date().iso().required().messages(customMessages),
+      end_date: joi
+        .date()
+        .iso()
+        .required()
+        .min(
+          joi.ref("start_date", { adjust: (value) => addDays(value, 3) }),
+          "at least 5 days after start date"
+        )
+        .messages(customMessages),
       requirements: joi
         .string()
         .min(5)
@@ -40,6 +55,7 @@ export const addtrain = {
     })
     .required(),
 };
+
 export const updatetrain = {
   body: joi
     .object({
@@ -53,7 +69,15 @@ export const updatetrain = {
       OpenForRegister: joi.boolean().optional().messages(customMessages),
       instructor_id: generalFields._id.optional().messages(customMessages),
       start_date: joi.date().optional().messages(customMessages),
-      end_date: joi.date().optional().messages(customMessages),
+      end_date: joi
+        .date()
+        .iso()
+        .min(
+          joi.ref("start_date", { adjust: (value) => addDays(value, 5) }),
+          "at least 5 days after start date"
+        )
+        .optional()
+        .messages(customMessages),
       requirements: joi
         .string()
         .min(5)

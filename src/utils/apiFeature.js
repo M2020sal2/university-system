@@ -44,6 +44,7 @@ export class ApiFeature {
   }
 
   populate(options) {
+    console.log(options);
     if (!this.QueryData.select?.includes(`${options.path}`)) {
       return this;
     }

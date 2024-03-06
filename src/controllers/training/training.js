@@ -103,13 +103,21 @@ export const updatetraining = asyncHandler(async (req, res, next) => {
     instructor_id,
     OpenForRegister,
   } = req.body;
+
+  // Check if either start date or end date is provided
+  if ((!start_date && end_date) || (start_date && !end_date)) {
+    return next(
+      new Error("Both start date and end date are required", { cause: 400 })
+    );
+  }
+
   const training = await trainingmodel.findById({ _id: training_id });
   if (!training) {
     return next(new Error("Invalid Training Id", { cause: 404 }));
   }
   if (training_name && training?.training_name != training_name) {
     const check = await trainingmodel.findOne({ training_name });
-    if (check && check._id.toString() != _id) {
+    if (check && check._id.toString() != training_id) {
       return next(new Error("Training Name Is Already Exist ", { cause: 400 }));
     } else {
       training.training_name = training_name;
@@ -138,7 +146,7 @@ export const deletetrain = asyncHandler(async (req, res, next) => {
   const { training_id } = req.query;
   const training = await trainingmodel.findByIdAndDelete(training_id);
   if (!training) {
-    return next(new Error("In-valid training Id", { cause: 404 }));
+    return next(new Error("Invalid training Id", { cause: 404 }));
   }
   return res
     .status(200)
